@@ -190,6 +190,8 @@ def sift(sieve, angle, failCode):
 def evaluateSuite(suite):
     global bins
 
+    debugId = suite.pointID[1]
+
     # The order of triage operations, though it may seem arbitrary,
     # was carefully chosen by the scientists.
     ok, failCode, notes, pointMaster = triage("epsilon", suite)
