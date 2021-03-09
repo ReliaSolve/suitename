@@ -15,8 +15,11 @@ Suitename takes an input file as its first argument, or if none provided, reads 
 Two forms of input are supported:
   1. A list of the 6 dihedral angles $/alpha$, $/beta$, $/gamma$, $/delta$, $/epsilon$, $/zeta$) for each residue of the RNA molecule. Suitename will re-parse the dihedral angles in the residues to obtain the 7 dihedral angles in each suite ($/delta/-1, $/epsilon/-1, $/zeta/-1, $/alpha$, $/beta$, $/gamma$, $/delta$), and then operate on those. This is the default input.
 
-      Each line of this format describes one residue, with fields separated by colons. The first several (default 6) are ID information, the remainder are angles. Sample:
+    Each line of this format describes one residue, with fields separated by colons. The first several (default 6) are ID information, the remainder are angles. Sample:
 1: A:   7: : :  U:-75.533:-154.742:48.162:80.895:-148.423:-159.688
+    If the number of fields before the first angle is not 6, use
+    -- pointIDfields <n> 
+    to tell Suitename the true number.
 
   2. A kinemage file providing a list of 7 or 9 dihedral angles in each suite. Mark this by using the --suitein command line flag. 9 angles include $/chi$-1 and $/chi$.
 

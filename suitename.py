@@ -9,15 +9,19 @@ import numpy as np
 from math import cos, pi
 
 #                           suitename.py
-# ***************************************************************
-# NOTICE: This is free software and the source code is freely
-# available. You are free to redistribute or modify under the
-# conditions that (1) this notice is not removed or modified
-# in any way and (2) any modified versions of the program are
-# also available for free.
-#               ** Absolutely no Warranty **
-# Copyright (C) 2007 David C. Richardson
-# ***************************************************************
+#                Copyright 2021  David C. Richardson
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 # 0.2.070524 preserve chi-1 and chi, so could preserve eta, theta
 # 0.3.070525 general read dangle record for, e.g.,  eta, theta
@@ -29,9 +33,9 @@ from math import cos, pi
 # 0.3.110606 range of delta updated by S.J.
 # 01/07/2014 S.J. updated so that it can take input with alternate conformations, *nd by default will calculate the suite for altA
 # 09/18/2014 S.J. updated so that suitename will ignore DNA residues
+# 03/01/2021 Ken Brooks converted to Python
 
-
-version = "suitename.0.6.012521"
+version = "suitename.1.0.030821"
 dbCounter = 0
 dbTarget = 10000  # triggers extra output on this suite
 
@@ -47,11 +51,17 @@ outNote.outliers = 0
 
 
 # ***main()******************************************************************
-def main():
+def main(inStream=None):
+    # inStream is used in internal testing
     global dbCounter  # for debugging KPB 210222
+    if args.version:
+        print(version)
+        return
 
     # 1. read the input
-    if args.infile != "":
+    if inStream:
+        inFile = inStream
+    elif args.infile != "":
         inFile = open(args.infile)
 #    elif sys.gettrace() is not None: # how to detect debugger present
     else:
@@ -261,7 +271,7 @@ def membership(bin, suite):
         # dominant cluster is not a possible cluster
         # just output than minimum distance match
         theCluster = closestCluster
-        situation = "{matchCount}-None-dom"
+        situation = f"{matchCount}-None-dom"
 
     elif matchCount > 1:  # and lDominant
         # find the closest cluster that is not the dominant cluster
@@ -369,7 +379,10 @@ def domSatDistinction(suite, domCluster, satCluster, matches, matchCount):
         if matches[dominantJ] < matches[closestJ]:
             closestJ = dominantJ
             closestCluster = domCluster
-        situation = f"{matchCount}-OUTSIDE-dom-sat"
+        if dps <= 0:
+            situation = f"{matchCount}-OUTSIDE-dom"
+        else:
+            situation = f"{matchCount}-OUTSIDE-sat"
 
     return closestCluster, closestJ, situation
 
@@ -474,10 +487,13 @@ flag: -kinemage
  group {{delta,delta}},subgroup {{gamma}},list {{cluster name}}
   flag: -etatheta or -thetaeta
     kinemage labels theta,eta instead of chi-1,chi
-
 flag: -satellite
   use special general case satellite widths
 flag: -nowannabe   
   never assign suites to wannabe clusters
 Note: any DNA residues found in the input will be ignored.
 """)
+
+
+if (__name__ == "__main__"):
+  main()

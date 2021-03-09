@@ -57,6 +57,8 @@ def report1Suite(
     elif comment:
         reason = " " + comment
         comment = ""
+    elif notes and args.causes:
+        reason += " " + notes
     if cluster.status == "wannabe":
         comment = " wannabe"
     outIDs = ":".join(suite.pointID)

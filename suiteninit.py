@@ -38,7 +38,10 @@ def parseCommandLine():
     outputStyle.add_argument("--kinemage", "-kinemage", action="store_true")
     parser.add_argument(
         "--chart", "-chart", action="store_true"
-    )  # a modifier to report
+    )  # a modifier to --report    
+    parser.add_argument(
+        "--causes", "-causes", action="store_true"
+    )  # a modifier to --report, reveals algorithm details
 
     # additional options
     parser.add_argument("--satellites", "-satellites", action="store_true")
@@ -48,6 +51,8 @@ def parseCommandLine():
     parser.add_argument("--thetaeta", "-thetaeta", action="store_true")
     parser.add_argument("--etatheta", "-etatheta", action="store_true")
     parser.add_argument("--test", "-test", action="store_true")
+    parser.add_argument("--version", "-version", action="store_true")
+    #            "--help" is automatically available, it summarizes this list.
 
     # numerical options
     parser.add_argument("--anglefields", "-anglefields", type=int, default=9)
@@ -210,8 +215,9 @@ bin2data = (2, "33 t",
 bin3data = (3, "33 m",
     ( 0 , "!!", "outlier", "white      ", "out",
         (0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0)),
-    ( 1 , "!!", "nothing", "white      ", "out", 
-        (0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0)),
+    # ( 1 , "!!", "nothing", "white      ", "out", 
+    #     (0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0)),
+    # viewed as highly dubious, KPB 210308
 )
 
 bin4data = (4, "32 p",

@@ -59,8 +59,8 @@ class Cluster:
     dominance = ""    # dom, sat, ord, out, tri, inc
     satelliteInfo = None    # present only if this cluster is a satellite
   
-    # tuple of 9 angles: chi-1 as 0 and chi as 8
-    # the standard 7 angles are indices 1-7:
+    # tuple of 9 angles:
+    # chiMinus, deltaMinus, epsilon, zeta, alpha, beta, gamma, delta, chi
     angle = () 
 
     # gathered statistics:
@@ -103,16 +103,13 @@ class Residue:
     '''
     pointIDs = []
     base = " "    # A, C, G, U, ...
-    angle = np.empty(0)  # will have 6 or 7 elements
+    angle = np.empty(0)  # will have 6 or 7 elements:
+    # alpha, beta, gamma, delta, epsilon, zeta [, chi]
 
     def __init__(self, ID, base, angles):
         self.pointIDs = ID
         self.base = base
         self.angle = angles
-        self.unpackAngles()
-
-    def unpackAngles(self):
-      pass
     
     # nicknames: for ease of reading the code, each angle is given
     # a meaningful alias. Here they are:
@@ -187,7 +184,8 @@ class Suite:
     '''    
     pointID = ()
     base = " "    # A, C, G, U, ...
-    angle = np.empty(0) # will become an np.array of 9 angles
+    angle = np.empty(0) # will become an np.array of 9 angles:
+    # chiMinus, deltaMinus, epsilon, zeta, alpha, beta, gamma, delta, chi
     
     # fields computed during analysis:
     cluster = None  # The cluster to which it is assigned
