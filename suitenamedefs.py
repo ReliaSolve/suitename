@@ -170,11 +170,13 @@ class Residue:
 
     @property
     def chi(self):
-        return self.angle[6]
+        if len(self.angle) > 6:
+            return self.angle[6]
 
     @chi.setter
     def chi(self, value):
-        self.angle[6] = value
+        if len(self.angle) > 6:
+            self.angle[6] = value
 
 
 class Suite:
@@ -188,10 +190,11 @@ class Suite:
     # chiMinus, deltaMinus, epsilon, zeta, alpha, beta, gamma, delta, chi
     
     # fields computed during analysis:
+    valid = False  # False means an incomplete, malformed suite
     cluster = None  # The cluster to which it is assigned
     suiteness = 0.0
     distance = 0.0
-    notes = ""
+    situation = ""  # by what logical path this cluster was assigned
     pointMaster = ""
     pointColor = ""
 
@@ -208,10 +211,11 @@ class Suite:
 
     def validate(self):
         # make sure that angles deltaMinus through delta are reasonable
+        self.valid = True
         for i in range(1, 8):
             if self.angle[i] < 0 or self.angle[i] > 360:
-                return False
-        return True
+                self.valid = False
+        return self.valid
 
     # nicknames: for ease of reading the code, each angle is given
     # a meaningful alias. Here they are:

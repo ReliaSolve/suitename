@@ -49,9 +49,8 @@ outNote.comment = ""
 outNote.wannabes = 0
 outNote.outliers = 0
 
-
 # ***main()******************************************************************
-def main(inStream=None):
+def main(inStream=None, outFile=None):
     # inStream is used in internal testing
     global dbCounter  # for debugging KPB 210222
     if args.version:
@@ -63,10 +62,18 @@ def main(inStream=None):
         inFile = inStream
     elif args.infile != "":
         inFile = open(args.infile)
-#    elif sys.gettrace() is not None: # how to detect debugger present
     else:
         inFile = sys.stdin
+    if not outFile:
+        outFile = sys.stdout
 
+    suites = read(inFile)
+    suites = compute(suites)
+    finalStats()
+    write(outFile, suites)
+
+
+def read(inFile):
     if args.suitein or args.suitesin:
         suites = readKinemageFile(inFile)
         if len(suites) == 0:
@@ -79,15 +86,20 @@ def main(inStream=None):
             sys.exit(1)
         suites = buildSuites(residues)
         suites = suites[:-1]
+    return suites
 
+def compute(suites):
+    global dbCounter
     # 2. process the suites
     for s in suites:
+        if s.pointID[3].strip() != "":
+          print('yes')
         if not s.validate():
             if args.test:
                 sys.stderr.write(f"! failed validation: {s.pointID}\n")
             if not args.noinc:
-              suitenout.write1Suite(
-                s, bins[13], bins[13].cluster[0], 0, 0, " tangled ", "", "", "", ""
+              annotate(s, bins[13], bins[13].cluster[0], 0, 0, " tangled ",
+                  "", "", "", ""
             )
             continue
 
@@ -97,25 +109,33 @@ def main(inStream=None):
         if bin is None:
             s.cluster = bins[0].cluster[0]
             bins[0].cluster[0].count += 1
-            suitenout.write1Suite(
-                s, bins[0], bins[0].cluster[0], 0, 0, text, issue, "", "", ""
+            annotate(s, bins[0], bins[0].cluster[0], 0, 0, text, issue,
+                "", "", ""
             )
         else:
             memberPack = membership(bin, s)
-            (cluster, distance, suiteness, notes, comment,
+            (cluster, distance, suiteness, situation, comment,
                 pointMaster, pointColor) = memberPack
-            suitenout.write1Suite(
-                s, bin, cluster, distance, suiteness, notes, issue, comment, 
-                pointMaster, pointColor)
-            s.suiteness = suiteness
-            s.distance = distance
-            s.notes = notes
-        s.pointMaster = pointMaster
-        s.pointColor = pointColor
+            annotate(s, bin, cluster, distance, suiteness, situation, issue, 
+                comment, pointMaster, pointColor)
         dbCounter += 1
+    return suites
 
-    finalStats()
-    suitenout.writeFinalOutput(suites, outNote)
+def annotate(suite, bin, cluster, distance, suiteness, situation, 
+                issue, comment, pointMaster, pointColor):
+    suite.bin = bin
+    suite.cluster = cluster
+    suite.distance = distance
+    suite.suiteness = suiteness
+    suite.situation = situation
+    suite.issue = issue
+    suite.comment = comment
+    suite.pointMaster = pointMaster
+#    suite.pointColor = pointColor
+
+
+def write(outFile, suites):
+    suitenout.output(outFile, suites, outNote)
 
 
 # *** evaluateSuite and its tools ***************************************
@@ -251,6 +271,7 @@ def membership(bin, suite):
     # find the closest cluster
     # search every cluster in the bin except cluster 0, which is for outliers
     closestD = 999
+    closestCluster = bin.cluster[0]  # default, representing an outlier
     for j, c in enumerate(bin.cluster[1:], 1):
         if c.status == "wannabe" and args.nowannabe:
             continue
@@ -301,7 +322,10 @@ def membership(bin, suite):
         # no match, it's an outlier
         closestJ = 0
         theCluster = closestCluster
-        situation = f"outlier distance {closestD:.3}"
+        if closestCluster.name != "!!":
+            situation = f"outlier distance {closestD:.3}"
+        else:
+            situation = "vacant bin"
         outNote.outliers += 1
         pointMaster = "O"
         pointColor = "white"
@@ -325,8 +349,8 @@ def membership(bin, suite):
             # so we deassign it here
             closestJ = 0
             comment = f"7D dist {theCluster.name}"
-            if theCluster.status == "wannabe":
-                comment += " wannabe"
+            # if theCluster.status == "wannabe":
+            #     comment += " wannabe"
         theCluster = bin.cluster[0]  # outlier
         suiteness = 0
 
@@ -395,6 +419,11 @@ def finalStats():
     for bin in bins.values():
         for c in bin.cluster:
             bin.count += c.count
+
+
+def clearStats():
+    for bin in bins.values():
+        bin.count = 0
 
 
 # *** The fancy math ********************************************************

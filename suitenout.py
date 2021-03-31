@@ -6,19 +6,34 @@ from enum import Enum
 import numpy as np
 from numpy import array
 
-outFile = sys.stdout  # future: might provide a way to change this
-
 reportCountAll = 0
 trigCountAll = 0
 suitenessSumAll = 0
 binSuiteCountAll = 0
 
 
+def output(outFile, suites, outNote):
+    for s in suites:
+        outSuite(outFile, s)
+    writeFinalOutput(outFile, suites, outNote)
+
+
+def outSuite(outFile, s):
+    if args.string:
+        string1Suite(outFile, s, s.cluster)
+    elif args.kinemage:
+        pass
+    else:
+        reportSuite(outFile, s)
+
+
+# deprecated, superseded by annotation:
 def write1Suite(suite, bin, cluster, distance, suiteness, notes, 
                 issue, comment, pointMaster, pointColor):
     if args.string:
-        string1Suite(suite, cluster)
+        string1Suite(sys.stdout, suite, cluster)
     elif args.kinemage:
+        # this can probably vanish entirely:
         kinemage1Suite(suite, bin, cluster, notes, distance, suiteness, 
                        issue, comment, pointMaster, pointColor,
         )
@@ -26,18 +41,18 @@ def write1Suite(suite, bin, cluster, distance, suiteness, notes,
         report1Suite(suite, bin, cluster, notes, distance, suiteness, issue, comment)
 
 
-def writeFinalOutput(suites, outNote):
+def writeFinalOutput(outFile, suites, outNote):
     if args.satellites:
         outNote.comment = " using special general case satellite widths"
     if args.string:
         pass
     elif args.kinemage:
-        kinemageFinal(suites, outNote)
+        kinemageFinal(outFile, suites, outNote)
     else:
-        reportFinal(outNote)
+        reportFinal(outFile, outNote)
 
 
-def string1Suite(suite, cluster):
+def string1Suite(outFile, suite, cluster):
     if args.nosequence:
         basestring = ":"
     else:
@@ -45,6 +60,54 @@ def string1Suite(suite, cluster):
     outFile.write(f"{cluster.name}{basestring}")
 
 
+def reportSuite(outFile, suite):
+    global reportCountAll, trigCountAll, suitenessSumAll, binSuiteCountAll
+
+    if not suite.valid: return
+
+    # 1. write one line of output for this suite
+    reason = ""; note=""
+    if suite.issue:
+        reason = " " + reasons[suite.issue]
+    elif suite.comment:
+        reason = " " + suite.comment
+    elif suite.situation:
+        reason += " " + suite.situation
+    if suite.cluster.status == "wannabe":
+        note = " wannabe"
+    outIDs = ":".join(suite.pointID)
+    output = (
+        f"{outIDs} {suite.bin.name} {suite.cluster.name} {float(suite.suiteness):5.3f}{reason}{note}\n"
+    )
+    outFile.write(output)
+    
+    # 2. gather statistics
+    reportCountAll += 1
+
+    bin = suite.bin
+    cluster = suite.cluster
+    suiteness = suite.suiteness
+    if bin.ordinal == 0:
+        trigCountAll += 1
+    elif bin.ordinal < 13:
+        suitenessSumAll += suiteness
+        binSuiteCountAll += 1
+
+    if cluster.ordinal == 0:
+        cluster.suitenessCounts[11] += 1
+    else:
+        cluster.suitenessSum += suiteness
+        # report in statistical baskets at intervals of 0.1:
+        # everything from 0 to 0.1 goes in bucket 1
+        # ... everything from 0.9 to 1.o goes into bucket 10
+        if suiteness == 0:
+            bucket = 0
+        else:
+            bucket = 1 + int(suiteness * 10)
+        cluster.suitenessCounts[bucket] += 1
+
+
+# deprecated, superseded by reportSuite
 def report1Suite(
     suite, bin, cluster, notes, distance, suiteness, issue, comment
 ):  # ? LComment, Ltriage
@@ -65,7 +128,7 @@ def report1Suite(
     output = (
         f"{outIDs} {bin.name} {cluster.name} {float(suiteness):5.3f}{reason}{comment}\n"
     )
-    outFile.write(output)
+    sys.stdout.write(output)
 
     # 2. gather statistics
     reportCountAll += 1
@@ -90,16 +153,16 @@ def report1Suite(
         cluster.suitenessCounts[bucket] += 1
 
 
-def reportFinal(outNote):
+def reportFinal(outFile, outNote):
     if not args.chart:
         outFile.write(outNote.comment + "\n")
-        suitenessAverage(0)
+        suitenessAverage(outFile, 0)
         if bins[1].cluster[1].count > 0:  # Aform 1a    070325
-            suitenessAverage(1)
-            suitenessAverage(2)
+            suitenessAverage(outFile, 1)
+            suitenessAverage(outFile, 2)
 
 
-def suitenessAverage(mode):
+def suitenessAverage(outFile,  mode):
     """
     Gather statistics on suiteness.
     12 buckets:
@@ -177,6 +240,20 @@ def suitenessAverage(mode):
         )
     outFile.write(f"{bucket[10]:6d} suites have suiteness >=.9    \n")
 
+
+def clearStatistics():
+    reportCountAll = 0
+    trigCountAll = 0
+    suitenessSumAll = 0
+    binsSuiteCountAll = 0
+
+    for i in range(1, 13):
+        bin = bins[i]
+        for cluster in bin.cluster:
+            cluster.count = 0
+            cluster.suitenessSum = 0
+            for k in range(12):
+                cluster.suitenessCounts[k] = 0
 
 
 # ***** kinemage output format *****************************************************
@@ -256,22 +333,22 @@ P   0.000   0.000 320.000   0.000   0.000 360.000
 
 """
 
-def kinemageFinal(suites, outNote):
+def kinemageFinal(outFile, suites, outNote):
     """
     Output the content of a kinemage file
     The 3, 2 order may seem odd, but it is a standard
     """
-    kinemageHeader(outNote)
+    kinemageHeader(outFile, outNote)
     for deltaMinus in (3, 2): 
       for delta in (3, 2):
-          binGroupOut(deltaMinus, delta, suites)
+          binGroupOut(outFile, deltaMinus, delta, suites)
     triaged = bins[0]
     if triaged.count > 0:
         outFile.write("@group {triaged} dominant dimension=9 wrap=360 select off\n")
-        binOut(triaged, suites)
+        binOut(outFile, triaged, suites)
 
 
-def kinemageHeader(outNote):
+def kinemageHeader(outFile, outNote):
     """ The invariant portion of a kinemage file """
     outFile.write(f"@text\n {outNote.version}\n {outNote.comment}\n")
     outFile.write("@kinemage 1\n")
@@ -292,6 +369,7 @@ def kinemageHeader(outNote):
         "0.000 360.000\n"
         )
     if outNote.outliers:
+      caddy
       outFile.write("@pointmaster 'O' {outliers}\n")
     if outNote.wannabes:
       outFile.write("@master {wannabees}\n")
@@ -305,7 +383,7 @@ def formatAngles(angles, separator):
     return out
 
 
-def binGroupOut(deltaMinus, delta, suites):
+def binGroupOut(outFile, deltaMinus, delta, suites):
     # If any bin in the group has data, generate a group header
     groupCount = 0
     for gamma in ("p", "t", "m"):
@@ -320,10 +398,10 @@ def binGroupOut(deltaMinus, delta, suites):
     for gamma in ("p", "t", "m"):
         bin = bins[(deltaMinus, delta, gamma)]
         if bin.count > 0:
-          binOut(bin, suites)
+          binOut(outFile, bin, suites)
 
 
-def binOut(bin, suites):
+def binOut(outFile, bin, suites):
     if any([c.count > 0 for c in bin.cluster]):
         outFile.write(f"@subgroup {{{bin.name}}} recessiveon \n")
     for cluster in bin.cluster[1:]:
@@ -366,10 +444,10 @@ def binOut(bin, suites):
             "nohilite master= {{data}}\n"
         ).format(bin.name, cluster.name, cluster.clusterColor)
         outFile.write(ballList)
-        outPoints(bin, cluster, suites, "")
+        outPoints(outFile, bin, cluster, suites, "")
 
 
-def outPoints(bin, cluster, suites, extra1):
+def outPoints(outFile, bin, cluster, suites, extra1):
     for s in suites:
         if s.cluster is cluster:
             if bin.name == "trig":  # the triage bin is especially handled

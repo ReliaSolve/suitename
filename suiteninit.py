@@ -56,7 +56,7 @@ def parseCommandLine():
 
     # numerical options
     parser.add_argument("--anglefields", "-anglefields", type=int, default=9)
-    parser.add_argument("--pointidfields", "-pointidfields", type=int, default=6)
+    parser.add_argument("--pointidfields", "-pointidfields", type=int, default=7)
     parser.add_argument("--ptid", "-ptid", type=int, default=0)
     parser.add_argument("--altid", "-altid", type=str, default="A")
     parser.add_argument("--altidval", "-altidval", type=str, default="A")
