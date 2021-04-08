@@ -48,8 +48,8 @@ def readResidues(inFile):
       continue
     fields = line.split(':')
     ids = fields[:args.pointidfields]
-    if ids[3].strip() != "":
-      print('yes')
+    # if ids[3].strip() != "":
+    #   print('yes')
     
     baseCode = fields[args.pointidfields-1]
     angleStrings = fields[args.pointidfields:]

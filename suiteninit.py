@@ -47,7 +47,7 @@ def parseCommandLine():
     parser.add_argument("--satellites", "-satellites", action="store_true")
     parser.add_argument("--nowannabe", "-nowannabe", action="store_true")
     parser.add_argument("--nosequence", "-nosequence", action="store_true")
-    parser.add_argument("--noinc", "-noinc", action="store_true")
+    parser.add_argument("--noinc", "-noinc", action="store_false")
     parser.add_argument("--thetaeta", "-thetaeta", action="store_true")
     parser.add_argument("--etatheta", "-etatheta", action="store_true")
     parser.add_argument("--test", "-test", action="store_true")
@@ -146,7 +146,6 @@ satelliteData = (
     ("1[", (0, 0, 0, 0, 0, 34, 0, 0, 0), (0, 0, 0, 0, 0, 56, 0, 0, 0)),
     ("4a", (0, 0, 40, 40, 0, 0, 0, 0, 0), (0, 0, 50, 50, 0, 0, 0, 0, 0)),
     ("#a", (0, 0, 26, 26, 0, 0, 0, 0, 0), (0, 0, 36, 36, 0, 0, 0, 0, 0)),
-    ("0i", (0, 0, 0, 0, 0, 60, 0, 0, 0), (0, 0, 0, 0, 0, 60, 0, 0, 0)),
     ("6j", (0, 0, 0, 0, 0, 60, 0, 0, 0), (0, 0, 0, 0, 0, 60, 0, 0, 0)),
 )
 # note on the satelliteData:
@@ -156,7 +155,10 @@ satelliteData = (
 
 
 def getSatelliteInfo(name):
+  if name in satelliteTable:
     return satelliteTable[name]
+  else:
+    return None
 
 
 # *** Cluster data  *******************************************************
@@ -351,6 +353,8 @@ def buildBin(data):
     clusters = []
     for item in data[2:]:
         c = suitenamedefs.Cluster(*item)
+        if c.dominance == "sat":
+            c.satelliteInfo = getSatelliteInfo(c.name)        
         clusters.append(c)
     bin = Bin(ordinal, name, clusters)
     return bin

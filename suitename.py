@@ -92,8 +92,6 @@ def compute(suites):
     global dbCounter
     # 2. process the suites
     for s in suites:
-        if s.pointID[3].strip() != "":
-          print('yes')
         if not s.validate():
             if args.test:
                 sys.stderr.write(f"! failed validation: {s.pointID}\n")
@@ -424,6 +422,8 @@ def finalStats():
 def clearStats():
     for bin in bins.values():
         bin.count = 0
+        for c in bin.cluster:
+            c.count = 0
 
 
 # *** The fancy math ********************************************************

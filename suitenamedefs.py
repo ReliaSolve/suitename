@@ -1,5 +1,3 @@
-import suiteninit
-
 import numpy as np
 from numpy import array
 from enum import Enum
@@ -76,10 +74,8 @@ class Cluster:
         self.clusterColor = color
         self.dominance = dominance  
         self.angle = array(angles)
-        if self.dominance == "sat":
-            self.satelliteInfo = suiteninit.getSatelliteInfo(name)
-        else:
-            self.satelliteInfo = None
+        self.satelliteInfo = None
+        # sometimes modified in suiteninit.buildBin
         self.suitenessCounts = np.zeros(12)
         self.suitenessSum = 0
 
