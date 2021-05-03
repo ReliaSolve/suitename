@@ -1,0 +1,48 @@
+void usageout(void) /* -h  -help */
+{
+  fprintf(stderr,"%s\n",version);
+  fprintf(stderr,"suitename -flags <stdin >stdout\n");
+  fprintf(stderr,"output flags: [ -report || -string || -kinemage ]\n");
+  fprintf(stderr,"default:  -report -residuein \n");
+  fprintf(stderr,"input flags: [ -residuein || -suitein  ]\n");
+  fprintf(stderr,"flags: [ -residuein [ -pointIDfields # ] ] default#==%d\n",NptIDfields);
+  fprintf(stderr," OR ");
+  fprintf(stderr,"flags: [ -suitein [ -anglefields # ] ]   default#==%d\n", Nanglefields);
+  fprintf(stderr,"\n");
+  fprintf(stderr,"defaults: -residuein  -pointIDfields %d\n",NptIDfields);
+  fprintf(stderr," as made by dangle \n");
+  fprintf(stderr,     "dangle \"alpha, beta, gamma, delta, epsilon, zeta\" in.pdb >out.dngl\n");
+  fprintf(stderr,     "label:model:chain:number:ins:type:alpha:beta:gamma:delta:epsilon:zeta\n");
+  fprintf(stderr,"if the file has alternate conformations, then use both -pointIDfields # -altIDfield # to specify the number of pointID fields and which field contains the altID\n"); /* S.J. 01/07/2014*/
+  fprintf(stderr,"use -altIDval <altID> to specify which alternate conformation to calculate suite for. By default calculated for alt A\n");
+  fprintf(stderr,"-suitein presumes point records from a kinemage\n");
+  fprintf(stderr,"{pointID} 7 or 9 anglefields \n");
+  fprintf(stderr,      "{ptID} [chi] deltam epsilon zeta alpha beta gamma delta [chi] \n");
+  fprintf(stderr," Note that all other kinemage lines must be stripped off.\n");
+  fprintf(stderr,"-thetaeta  kinemage labels theta,eta instead of chi-1,chi\n");
+  fprintf(stderr,"Note dangle trick to make theta,...,eta suites directly\n");
+  fprintf(stderr,"\n");
+  fprintf(stderr,"flag: -report [ -chart ]\n");
+  fprintf(stderr," suites in order of input, suiteness summary at end\n");  
+  fprintf(stderr,"( -chart : NO summary at end, for MolProbity multichart\n");
+  fprintf(stderr,"\n");
+  fprintf(stderr,"flag: -string\n");
+  fprintf(stderr," 3 character per suite string in order of input\n");  
+  fprintf(stderr,"   20 per line, ptID of n*20th at end of line\n");  
+  fprintf(stderr,"   flag: -nosequence\n");
+  fprintf(stderr,"      only suite names, no Base sequence character\n");  
+  fprintf(stderr,"   flag: -oneline\n");
+  fprintf(stderr,"      string all one line, no point IDs\n");  
+  fprintf(stderr,"   flag: -overlap\n");
+  fprintf(stderr,"      20 per line: overlap 10 each line, 10 new per line\n");
+  fprintf(stderr,"\n");
+  fprintf(stderr,"flag: -kinemage\n");
+  fprintf(stderr," kinemage of clusters grouped by pucker,pucker ... \n");  
+  fprintf(stderr," group {delta,delta},subgroup {gamma},list {cluster name}\n");
+  fprintf(stderr,"\n");
+  /*fprintf(stderr,"flag: -satellite\n"); DO NOT ADVERTISE THIS OPTION*/
+  /*fprintf(stderr,"  use special general case satellite widths\n");*/
+  fprintf(stderr," assigns to designated wannabe clusters, default: wannabe\n");
+  /*fprintf(stderr,"flag: -wannabe\n");*/
+  fprintf(stderr,"flag: -nowannabe   to not assign them\n");
+

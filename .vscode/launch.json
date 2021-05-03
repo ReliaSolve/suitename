@@ -1,0 +1,179 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "args": [],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "CCTBX: current file",
+      "type": "python",
+      "python": "C:\\Users\\Ken\\Desktop\\Richardson\\cctbx-build\\build\\bin\\python.bat",
+      "env": {
+        "CLIBD_MON": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\mon_lib",
+        "MMTBX_CCP4_MONOMER_LIB": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\geostd"
+       },
+      "request": "launch",
+      "program": "${file}",
+      "args": [],
+      "console": "integratedTerminal"
+    },    
+    {
+      "name": "CCTBX suitework",
+      "type": "python",
+      "python": "C:\\Users\\Ken\\Desktop\\Richardson\\cctbx-build\\build\\bin\\python.bat",
+      "env": {
+        "CLIBD_MON": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\mon_lib",
+        "MMTBX_CCP4_MONOMER_LIB": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\geostd"
+       },
+      "request": "launch",
+      "program": "suitework.py",
+      "args": [],
+      "console": "integratedTerminal"
+    },    
+    {
+      "name": "CCTBX suitename-cmd",
+      "type": "python",
+      "python": "C:\\Users\\Ken\\Desktop\\Richardson\\cctbx-build\\build\\bin\\python.bat",
+      "env": {
+        "CLIBD_MON": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\mon_lib",
+        "MMTBX_CCP4_MONOMER_LIB": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\geostd"
+       },
+      "request": "launch",
+      "program": "command_line\\suitename-cmd.py",
+      "args": ["-chart", "-causes", "test\\2xLk.pdb", "noinc=true"],  // cannot be blank for CCBTX argparse
+      "console": "integratedTerminal"
+    },  
+    {
+      "name": "CCTBX suitename help",
+      "type": "python",
+      "python": "C:\\Users\\Ken\\Desktop\\Richardson\\cctbx-build\\build\\bin\\python.bat",
+      "env": {
+        "CLIBD_MON": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\mon_lib",
+        "MMTBX_CCP4_MONOMER_LIB": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\geostd"
+       },
+      "request": "launch",
+      "program": "command_line\\suitename-cmd.py",
+      "args": ["--attributes-level", "1", "--show-defaults", "-h"],  // cannot be blank for CCBTX argparse
+      "console": "integratedTerminal"
+    },  
+    {
+      "name": "suitename-multilevel",
+      "type": "python",
+      "python": "C:\\Users\\Ken\\Desktop\\Richardson\\cctbx-build\\build\\bin\\python.bat",
+      "env": {
+        "CLIBD_MON": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\mon_lib",
+        "MMTBX_CCP4_MONOMER_LIB": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\geostd"
+       },
+      "request": "launch",
+      "program": "command_line\\suitename-cmd.py",
+      "args": ["test\\2xLk.pdb", "kinemage=true", "noinc=true"],  // cannot be empty for CCBTX argparse
+      "console": "integratedTerminal"
+    },  
+    {
+      "name": "CCTBX suitename-example",
+      "type": "python",
+      "python": "C:\\Users\\Ken\\Desktop\\Richardson\\cctbx-build\\build\\bin\\python.bat",
+      "env": {
+        "CLIBD_MON": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\mon_lib",
+        "MMTBX_CCP4_MONOMER_LIB": "C:\\Users\\Ken\\Desktop\\Richardson\\MolProbity\\modules\\chem_data\\geostd"
+       },
+      "request": "launch",
+      "program": "command_line\\suitename-example.py",
+      "args": ["test\\2xLk.pdb", "-chart", "-causes", "noinc=true"],  // cannot be blank for CCBTX argparse
+      "console": "integratedTerminal"
+    },    
+    {
+      "name": "Unit test",
+      "type": "python",
+      "request": "launch",
+      "program": "unit-test\\UnitTest.py",
+      "args": [],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "report 3gx5",
+      "type": "python",
+      "request": "launch",
+      "program": "suitemain.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\3gx5_3h-out.dngl", "--pointIDfields", "6"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "kinemage 3gx5",
+      "type": "python",
+      "request": "launch",
+      "program": "suitemain.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\3gx5_3h-out.dngl", "--kinemage" "--pointIDfields", "6"],
+      "console": "integratedTerminal"
+    },    
+    {
+      "name": "report 4nLf",
+      "type": "python",
+      "request": "launch",
+      "program": "suitename.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\4nLf.suitegeom", "--pointIDfields", "7" "--causes"],
+      "console": "integratedTerminal"
+    }
+    {
+      "name": "report 4nLf packaged",
+      "type": "python",
+      "request": "launch",
+      "program": "command_line\\suitename.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\4nLf.suitegeom", "--pointIDfields", "7", "--causes"],
+      "console": "integratedTerminal"
+    }
+    {
+      "name": "kinemage 4rne",
+      "type": "python",
+      "request": "launch",
+      "program": "suitemain.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\4rne.suitegeom", "--test", "--kinemage" "--pointIDfields", "7"],
+      "console": "integratedTerminal"
+    },  
+    {
+      "name": "kinemage in",
+      "type": "python",
+      "request": "launch",
+      "program": "suitemain.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\9dRNA_23_suites.kin", "--suitein" "--pointIDfields", "6"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "kinemage in fancy",
+      "type": "python",
+      "request": "launch",
+      "program": "suitemain.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\7DRNA11_22mod.kin", "--suitein"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "variable report",
+      "type": "python",
+      "request": "launch",
+      "program": "suitemain.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\2jLv.suitegeom", "--pointIDfields", "7"],
+      "console": "integratedTerminal"
+    }
+    {
+      "name": "variable kinemage",
+      "type": "python",
+      "request": "launch",
+      "program": "suitemain.py",
+      "args": ["C:\\Users\\Ken\\Desktop\\Richardson\\suitename\\test\\6uv2.suitegeom", "--pointIDfields", "7", "--kinemage"],
+      "console": "integratedTerminal"
+    }
+    ]
+  "setupCommands": [
+    {
+        "text": "settings set target.input-path ${workspaceFolder}/text.txt"
+    }
+  ]
+}

@@ -1,10 +1,8 @@
 from suitenamedefs import Suite, Residue
-from suiteninit import args
 
 import numpy as np
 import math, sys
 
-altidfield = args.altidfield  # where to find codes for alternatives
 
 # The great variety of codes that may represent each base in the input file
 NAListA = ":ADE:  A:A  : Ar:ATP:ADP:AMP:T6A:1MA:RIA:  I:I  :"
@@ -41,6 +39,8 @@ def stringToFloat(string):
 
 
 def readResidues(inFile):
+  from suiteninit import args
+
   lines = inFile.readlines()
   residues = []
   for line in lines:
@@ -53,7 +53,8 @@ def readResidues(inFile):
     
     baseCode = fields[args.pointidfields-1]
     angleStrings = fields[args.pointidfields:]
-    if ids[altidfield].strip() != "" and ids[altidfield] != args.altidval:
+    if ids[args.altidfield].strip() != "" \
+        and ids[args.altidfield] != args.altidval:
       continue  # lines for the wrong alternative conformation are ignored
 
     base = findBase(baseCode)

@@ -1,0 +1,36 @@
+  # input styles
+    parser.add_argument("--residuein", "-residuein", action="store_true")
+    parser.add_argument("--residuesin", "-residuesin", action="store_true")
+    parser.add_argument("--suitein", "-suitein", action="store_true")
+    parser.add_argument("--suitesin", "-suitesin", action="store_true")
+
+    # output styles (default is --report)
+    outputStyle = parser.add_mutually_exclusive_group()
+    outputStyle.add_argument("--report", "-report", action="store_true")
+    outputStyle.add_argument("--string", "-string", action="store_true")
+    outputStyle.add_argument("--kinemage", "-kinemage", action="store_true")
+    parser.add_argument(
+        "--chart", "-chart", action="store_true"
+    )  # a modifier to --report    
+    parser.add_argument(
+        "--causes", "-causes", action="store_true"
+    )  # a modifier to --report, reveals algorithm details
+
+    # additional options
+    parser.add_argument("--satellites", "-satellites", action="store_true")
+    parser.add_argument("--nowannabe", "-nowannabe", action="store_true")
+    parser.add_argument("--nosequence", "-nosequence", action="store_true")
+    parser.add_argument("--noinc", "-noinc", action="store_false")
+    parser.add_argument("--thetaeta", "-thetaeta", action="store_true")
+    parser.add_argument("--etatheta", "-etatheta", action="store_true")
+    parser.add_argument("--test", "-test", action="store_true")
+    parser.add_argument("--version", "-version", action="store_true")
+    #            "--help" is automatically available, it summarizes this list.
+
+    # numerical options
+    parser.add_argument("--anglefields", "-anglefields", type=int, default=9)
+    parser.add_argument("--pointidfields", "-pointidfields", type=int, default=7)
+    parser.add_argument("--ptid", "-ptid", type=int, default=0)
+    parser.add_argument("--altid", "-altid", type=str, default="A")
+    parser.add_argument("--altidval", "-altidval", type=str, default="A")
+    parser.add_argument("--altidfield", "-altidfield", type=int, default=4)

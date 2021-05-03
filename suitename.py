@@ -50,7 +50,7 @@ outNote.wannabes = 0
 outNote.outliers = 0
 
 # ***main()******************************************************************
-def main(inStream=None, outFile=None):
+def main(inStream=None, outFile=None, options=None):
     # inStream is used in internal testing
     global dbCounter  # for debugging KPB 210222
     if args.version:

@@ -17,11 +17,25 @@ args = {}
 
 # ***parseCommandLine()*******************************************************
 def parseCommandLine():
+    "Parse a command line, returning a parseargs.Namespace"
     global args
     for i, arg in enumerate(sys.argv):
         sys.argv[i] = arg.lower()
 
     parser = argparse.ArgumentParser()
+    buildParser(parser)
+
+    # now actually parse them
+    args = parser.parse_args()
+    if args.ptid:
+        args.pointidfields = args.ptid
+    pass
+    return args
+
+
+def buildParser(parser):
+    "Set up the expected arguments, ready for parsing"
+    
     # the input file may be given as an argument or as a redirect
     parser.add_argument("infile", nargs="?", default="")
 
@@ -44,15 +58,14 @@ def parseCommandLine():
     )  # a modifier to --report, reveals algorithm details
 
     # additional options
-    parser.add_argument("--satellites", "-satellites", action="store_true")
-    parser.add_argument("--nowannabe", "-nowannabe", action="store_true")
-    parser.add_argument("--nosequence", "-nosequence", action="store_true")
-    parser.add_argument("--noinc", "-noinc", action="store_false")
+    # parser.add_argument("--satellites", "-satellites", action="store_true")
+    # parser.add_argument("--nowannabe", "-nowannabe", action="store_true")
+    # parser.add_argument("--nosequence", "-nosequence", action="store_true")
+    parser.add_argument("--noinc", "-noinc", action="store_true")
     parser.add_argument("--thetaeta", "-thetaeta", action="store_true")
     parser.add_argument("--etatheta", "-etatheta", action="store_true")
     parser.add_argument("--test", "-test", action="store_true")
     parser.add_argument("--version", "-version", action="store_true")
-    #            "--help" is automatically available, it summarizes this list.
 
     # numerical options
     parser.add_argument("--anglefields", "-anglefields", type=int, default=9)
@@ -65,12 +78,8 @@ def parseCommandLine():
     # the following are deprecated:
     parser.add_argument("--angles", type=int, default=9)
     parser.add_argument("--resAngles", type=int, default=6)
-
-    # now actually parse them
-    args = parser.parse_args()
-    if args.ptid:
-        args.pointidfields = args.ptid
-    pass
+    #   "--help" is automatically available, it summarizes this list.
+    return parser
 
 
 # *** codes to match various residues ****************************
@@ -397,6 +406,6 @@ def buildTheBins():
     return bins
 
 
-parseCommandLine()
+# parseCommandLine()
 buildSatelliteTable()
 bins = buildTheBins()
