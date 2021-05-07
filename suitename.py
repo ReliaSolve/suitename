@@ -206,6 +206,8 @@ def sift(sieve, angle, failCode):
 
 
 def evaluateSuite(suite):
+    '''Determine whether suite falls into one of 12 predefined bins, 
+     and if so, which.'''
     global bins
 
     debugId = suite.pointID[1]
@@ -253,8 +255,22 @@ def evaluateSuite(suite):
 # ***membership()***************************************************************
 
 # cluster membership:
-# given the bin, we are looking for the correct cluster
+
+# Three of the seven dimensions (delta-1, gamma, and delta) have already been
+# used to select a bin. These angles are fairly cut and dried, in-or-out type 
+# decisions. The other four are used in this function to select the closest 
+# cluster in four-dimensional space. Much research has gone into determining 
+# meaningful boundaries for clusters in this four dimensional space. After the 
+# nearest cluster is selected, we go back and use seven-dimensional space to 
+# refine the distance measurement; this may change whether our suite is in or 
+# out of the cluster, but it will not change the selection of cluster.
+#
+# New research would be required to determine appropriate cluster boundaries in 
+# seven dimensional space.
+
 def membership(bin, suite):
+    'Having selected a bin, we look for the best cluster match within that bin'
+
     matches = np.full(MAX_CLUSTERS, 999.9)
     matchCount = 0
     comment = ""
@@ -330,7 +346,7 @@ def membership(bin, suite):
 
     # final computation of suiteness
     # this time we use all 7 dimensions
-    if dbCounter >= dbTarget and dbCounter <= dbTarget + 1:  # KPB debug
+    if dbCounter >= dbTarget and dbCounter <= dbTarget + 1:  # KPB debug tool
         print(suite.pointID)
         print(suite.angle)
         print(theCluster.name)

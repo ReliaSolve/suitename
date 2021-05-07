@@ -15,7 +15,7 @@ def parseArgs(programClass, logger):
   print(args)
   # print(others)
 
-  # create the cc tbx aspect of the parser
+  # create the cctbx aspect of the parser
   parser2 = CCTBXParser(
     program_class = programClass,
     # custom_process_arguments = custom_args_proc,
