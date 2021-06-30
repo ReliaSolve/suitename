@@ -75,13 +75,15 @@ int  loadsuite(void)
     suiteptr->ptID[n] = '\0'; /*terminate ptID string*/
     suiteptr->basechr[0] = newresidueptr->basechr[0]; /*070412*/
     suiteptr->basechr[1] = '\0';
-    suiteptr->ang[1] = suiteptr->deltam  = oldresidueptr->delta;
-    suiteptr->ang[2] = suiteptr->epsilon = oldresidueptr->epsilon;
+	suiteptr->ang[0] = suiteptr->chim = 0.0;  // stomping an uninit memory bug
+	suiteptr->ang[1] = suiteptr->deltam = oldresidueptr->delta;
+	suiteptr->ang[2] = suiteptr->epsilon = oldresidueptr->epsilon;
     suiteptr->ang[3] = suiteptr->zeta    = oldresidueptr->zeta;
     suiteptr->ang[4] = suiteptr->alpha   = newresidueptr->alpha;
     suiteptr->ang[5] = suiteptr->beta    = newresidueptr->beta;
     suiteptr->ang[6] = suiteptr->gamma   = newresidueptr->gamma;
     suiteptr->ang[7] = suiteptr->delta   = newresidueptr->delta;
+	suiteptr->ang[8] = suiteptr->chi = 0.0;
 
     return(1);
 }
@@ -147,8 +149,8 @@ int  clearnewresidue(void)
     newresidueptr->gamma   = 9999.99;
     newresidueptr->delta   = 9999.99;
     newresidueptr->epsilon = 9999.99;
-    newresidueptr->zeta    = 9999.99;
-    return(1);
+	newresidueptr->zeta = 9999.99;
+	return(1);
 }
 /*___clearnewresidue()_______________________________________________________*/
 
@@ -170,13 +172,13 @@ int  loadnewresidue(void)
           angle[j] = angle[j] + 360;
        }
     }
-    newresidueptr->alpha   = angle[1];
-    newresidueptr->beta    = angle[2];
+	newresidueptr->alpha = angle[1];
+	newresidueptr->beta    = angle[2];
     newresidueptr->gamma   = angle[3];
     newresidueptr->delta   = angle[4];
     newresidueptr->epsilon = angle[5];
     newresidueptr->zeta    = angle[6];
-    return(1);
+	return(1);
 }
 /*___loadnewresidue()________________________________________________________*/
 
@@ -319,7 +321,9 @@ int  interpretresiduerecord(void)
                ns = j+1;
                n++;
             }
-         }/*close nth field*/
+//			angle[0] = 0.0;  // Warding off an uninit storage bug  KPB 300621
+//			angle[7] = 0.0;
+		  }/*close nth field*/
       }/* : */
       else
       {/* input character , only actually use numstr for angle fields*/

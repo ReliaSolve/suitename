@@ -141,6 +141,7 @@ fprintf(stderr,"\n");
                      ibin = 13; /*angles not fully specified*/
                      jclst = 0; /*cluster not assigned in dummy bin*/
                      sprintf(sour," tangled "); /*suite incomplete angles*/
+					 Ltriage = 0;	// uninit storage bugfix KPB 210630
                      writesuite(ibin,jclst,sour,distance,suiteness,ptmaster,ptcolor);
                        /*binname "inc "  clustername "__" 070414 */
                   }
